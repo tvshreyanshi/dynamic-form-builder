@@ -23,53 +23,68 @@
     </div>
     <div class="flex-initial bg-slate-600 flex justify-center mt-[100px] main-layout" @dragover.prevent="allowDrop" @drop="dragover()">
       <p>Drop here</p>
-      <div v-for="(item, index) in mainLayoutItems" :key="index">
-        {{ item.title }}
-      </div>
+      <!-- <div v-for="(item, index) in mainLayoutItems" :key="index"> -->
+        <!-- {{ item.title }} -->
+        <!-- :onSubmit="onSubmit" -->
+        <form-builder
+        resource=""
+        :items="mainLayoutItems"
+        :value="storeData"
+        />
+        <!-- :value="user" -->
+      <!-- </div> -->
     </div>
 </div>
 </template>
 <script>
 import { defineComponent, ref } from "vue";
+import FormBuilder from "../CustomElements/FormBuilder.vue";
 const mainLayoutItems = ref([]);
+const storeData = ref({
+  id: '',
+  name: '',
+  title: '',
+})
 
 export default defineComponent({
   components: {
+    FormBuilder,
   },
   setup() {
     const sidebarMenu = [
       {
         title: "Input",
-        icon: '<i class="fa-solid fa-gauge"></i>',
-
+        label: 'name',
+        id: 'inputt',
+        input: 'InputText',
+        rules: 'required',
       },
       {
         title: "Select",
-        icon: '<i class="fa-regular fa-file-lines"></i>',
       },
       {
         title: "Teaxt Area",
-        icon: '<i class="fa-regular fa-image"></i>',
       },
       {
         title: "Checkbox",
-        icon: '<i class="fa-solid fa-file-contract"></i>',
       },
      
     ];
     const dragStart = (item) => {
-      console.log('drag event', item);
+      // console.log('drag event', item);
       event.dataTransfer.setData("text/plain", JSON.stringify(item));
     };
     const allowDrop = (event) => {
       event.preventDefault();
     }
-    const dragover = (item) => {
+    const dragover = () => {
+      console.log('event', event);
       event.preventDefault();
-      console.log('item', item);
+      // console.log('item', item);
       const data = JSON.parse(event.dataTransfer.getData("text/plain"));
-      console.log('drop', data);
+      // console.log('drop', data);
       mainLayoutItems.value.push(data);
+      console.log('mainLayoutItems', mainLayoutItems);
     };
     return {
       sidebarMenu,
@@ -77,6 +92,7 @@ export default defineComponent({
       dragover,
       allowDrop,
       mainLayoutItems,
+      storeData,
     };
   },
 });

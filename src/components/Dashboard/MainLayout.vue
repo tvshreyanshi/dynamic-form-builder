@@ -1,14 +1,5 @@
 <template>
-    <div>Main Layout--------------------------------------</div>
-    <div>Main Layout--------------------------------------</div>
-    <div>Main Layout--------------------------------------</div>
-    <div>Main Layout--------------------------------------</div>
-    <div>Main Layout--------------------------------------</div>
-    <div>Main Layout--------------------------------------</div>
-    <div>Main Layout--------------------------------------</div>
-    <div>Main Layout--------------------------------------</div>
-    <div>Main Layout--------------------------------------</div>
-    <div>Main Layout--------------------------------------</div>
+    <div></div>
 </template>
 <script>
 import { defineComponent } from 'vue'

@@ -14,7 +14,8 @@
 
 </template>
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
+import { inputDefault } from '../Composables';
 
 export default defineComponent({
     props: ({
@@ -26,7 +27,11 @@ export default defineComponent({
         placeholder: null,
     }),
     setup() {
-        
+        console.log('in input text');
+        const { update } = inputDefault();
+        return {
+            update,
+        }
     },
 })
 </script>
