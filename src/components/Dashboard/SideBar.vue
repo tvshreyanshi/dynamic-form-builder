@@ -22,7 +22,10 @@
       </div>
     </div>
     <div class="flex-initial bg-slate-600 flex justify-center mt-[100px] main-layout" @dragover.prevent="allowDrop" @drop="dragover()">
-      <p>Drop here</p>
+      <div v-if="mainLayoutItems.length == 0" class="flex flex-col items-center">
+        <img src="../../assets/images/drag.png" width="150px" height="150px" />
+        <p class="text-white">Drop Element here...</p>
+      </div>
       <!-- <div v-for="(item, index) in mainLayoutItems" :key="index"> -->
         <!-- {{ item.title }} -->
         <!-- :onSubmit="onSubmit" -->
@@ -55,9 +58,9 @@ export default defineComponent({
       {
         title: "Input",
         label: 'name',
-        id: 'inputt',
+        // id: 'inputt',
         input: 'InputText',
-        rules: 'required',
+        // rules: 'required',
       },
       {
         title: "Select",

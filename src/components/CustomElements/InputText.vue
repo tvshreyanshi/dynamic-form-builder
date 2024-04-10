@@ -10,12 +10,13 @@
     @input="update"
     size="sm"
     :data-vv-name="id"
+    class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
      />
 
 </template>
 <script>
 import { defineComponent } from 'vue';
-import { inputDefault } from '../Composables';
+// import { inputDefault } from '../Composables';
 
 export default defineComponent({
     props: ({
@@ -28,10 +29,16 @@ export default defineComponent({
     }),
     setup() {
         console.log('in input text');
-        const { update } = inputDefault();
-        return {
-            update,
-        }
+        // const { update } = inputDefault();
+        // return {
+        //     update,
+        // }
     },
 })
 </script>
+<style>
+form h5 {
+  margin-top: 2rem;
+}
+
+</style>

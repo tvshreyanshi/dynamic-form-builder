@@ -18,7 +18,7 @@
               <b-button size="sm" variant="outline-secondary shadow-none" class="mt-2 mr-2" @click="$emit('editClick',item)">
                 <span class="icon-edit"></span>
               </b-button>
-            </div> -->{{ item }}-----
+            </div> -->{{ item.label }}
             <component
             v-if="!item.hideField"
             :is="item.input"
@@ -58,7 +58,7 @@
 </template>
 <script>
 // import { defineComponent } from 'vue';
-import { computeProperties, inputDefault } from '../Composables';
+import { computeProperties } from '../Composables';
 import InputText from "./InputText.vue";
 
 export default {
@@ -116,7 +116,7 @@ export default {
   },
   setup() {
       const { fieldProperties } = computeProperties();
-      const { update } = inputDefault();
+      // const { update } = inputDefault();
       console.log('in formBuilder');
       const createGroupedArray = (arr, chunkSize) => {
 
@@ -129,7 +129,7 @@ export default {
     }      
       return{
         fieldProperties,
-        update,
+        // update,
         createGroupedArray,
       }
 
