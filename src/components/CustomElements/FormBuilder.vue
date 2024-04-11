@@ -5,8 +5,8 @@
     :name="resource ? `${resource}-form` : 'global-form'"
     @submit.prevent="submitForm"
   >
-  <b-row v-for="(chunk, key) in createGroupedArray(items, cols)" :key="key">
-      <b-col v-for="(item, key) in chunk" :key="key" >
+  <div v-for="(chunk, rowIndex) in createGroupedArray(items, cols)" :key="rowIndex"> <!-- row -->
+      <div v-for="(item, colIndex) in chunk" :key="colIndex" > <!-- set as col -->
         <div v-if="item.type === 'subtitle'" :class="[item.subTitleClass ? item.subTitleClass: '', '']">
           <h5>{{ item.text }}</h5>
           <!-- slot for pass any in between header -->
@@ -14,11 +14,6 @@
         </div>
         <div v-else>
           <div class="d-flex w-100">
-            <!-- <div v-if="item.isCustomInput">
-              <b-button size="sm" variant="outline-secondary shadow-none" class="mt-2 mr-2" @click="$emit('editClick',item)">
-                <span class="icon-edit"></span>
-              </b-button>
-            </div> -->{{ item.label }}
             <component
             v-if="!item.hideField"
             :is="item.input"
@@ -29,22 +24,19 @@
             v-model="value[item.id]"
             :key="key"
             :placeholder="item.placeholder"
+            @click="selectItem(rowIndex, colIndex, item)"
+            :class="{ selected: isSelected(rowIndex, index)}"
             :help="item.help">
             </component>
             <!-- @change="onChange($event, item.id)" -->
-            <div v-if="item.isCustomInput">
-              <b-button size="sm" variant="outline-danger shadow-none" class="mt-2" @click="$emit('deleteClick', item)">
-                <delete-icon></delete-icon>
-              </b-button>
-            </div>
           </div>
           <!--slot for any component in between any form input -->
           <slot v-if="item.newOption" :name="item.id"></slot>
         </div>
-      </b-col>
-    </b-row>
+      </div>
+    </div>
     <div v-if="onSubmit" class="form-footer">
-      <b-button
+      <button
         v-if="onSubmit && canSave"
         type="submit"
         variant="primary"
@@ -52,16 +44,16 @@
         title="save"
       >
         SAVE
-      </b-button>
+      </button>
     </div>
   </form>
 </template>
 <script>
-// import { defineComponent } from 'vue';
+import { ref, defineComponent } from 'vue';
 import { computeProperties } from '../Composables';
 import InputText from "./InputText.vue";
 
-export default {
+export default defineComponent({
   name: "FormBuilder",
   components: {
     InputText,
@@ -113,8 +105,45 @@ export default {
       type: Boolean,
       default: true,
     },
+    labelColMd: {
+        type: Number,
+        default: 3,
+        },
+        labelColLg: {
+            type: Number,
+            default: 4,
+        },
+        inputColMd: {
+            type: Number,
+            default: 9,
+        },
+        inputColLg: {
+            type: Number,
+            default: 8,
+        },
+        simple: {
+            type: Boolean,
+            default: false,
+        },
+        preventUpdate: {
+            type: Boolean,
+            default: false,
+        },
+        rowIndex: null,
+        id: null,
+        label: null,
+        model: null,
+        module: null,
+        index: null,
+        help: null,
+        hideField: {
+          type: Boolean,
+          default: false,
+        },
   },
-  setup() {
+  setup(props, {emit}) {
+    const selectedItemIndex = ref(null);
+    // const emit = defineEmits(['updateItem']);
       const { fieldProperties } = computeProperties();
       // const { update } = inputDefault();
       console.log('in formBuilder');
@@ -126,14 +155,23 @@ export default {
         chunks.push(arr.slice(i, i + chunkSize));
       }
       return chunks;
-    }      
+    }
+    const selectItem = (rowIndex, colIndex, items) => {
+      selectedItemIndex.value = { rowIndex, colIndex };
+      emit('updateItem', items);
+    };
+    const isSelected = (rowIndex, colIndex) => {
+      const selected = selectedItemIndex.value;
+      return selected && selected.rowIndex === rowIndex && selected.colIndex === colIndex;
+    };
       return{
         fieldProperties,
         // update,
         createGroupedArray,
+        selectItem,
+        isSelected,
       }
-
   },
-};
+});
 </script>
 
