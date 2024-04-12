@@ -1,9 +1,12 @@
 <template>
   <!-- drawer init and show -->
   <div class="flex">
-    <div class="fixed top-16 left-0 z-40 w-64 h-screen p-4 overflow-y-auto transition-transform transform-none bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-navigation-label">
+    <div class="flex top-16">
+      <button @click="closeLeftSidebar">Open sideBar</button>
+    </div>
+    <div v-if="leftSidebarOpened" class="fixed top-16 left-0 z-40 w-64 h-screen p-4 overflow-y-auto transition-transform transform-none bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-navigation-label">
       <h5  class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400">Menu</h5>
-      <button type="button" data-drawer-hide="drawer-navigation" aria-controls="drawer-navigation" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 end-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" >
+      <button @click="closeLeftSidebar()" type="button" data-drawer-hide="drawer-navigation" aria-controls="drawer-navigation" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 end-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" >
           <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
           <span class="sr-only">Close menu</span>
       </button>
@@ -34,6 +37,7 @@
         :items="mainLayoutItems"
         :value="storeData"
         @updateItem="ItemSelected"
+        @deleteClick="itemDelete"
         />
         <!-- :value="user" -->
       <!-- </div> -->
@@ -53,13 +57,13 @@
                       <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
                   </svg> -->
                   <div class="block">
-                    <div>
-                      <p>title</p>
-                      <input type="text" v-model="selectedItem.label" class="text-black" />
+                    <div class="my-4">
+                      <p>Label</p>
+                      <input type="text" v-model="selectedItem.label" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"  />
                     </div>
-                    <div>
-                      <p>placeholder</p>
-                      <input type="text" v-model="selectedItem.placeholder" class="text-black" />
+                    <div class="my-4">
+                      <p>Placeholder</p>
+                      <input type="text" v-model="selectedItem.placeholder" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                     </div>
                   </div>
                   <!-- <span class="ms-3">{{ selectedItem}}</span> -->
@@ -86,6 +90,7 @@ export default defineComponent({
   },
   setup() {
     const selectedItem = ref([]);
+    const leftSidebarOpened = ref(true);
     const sidebarMenu = [
       {
         title: "Input",
@@ -93,6 +98,17 @@ export default defineComponent({
         id: 'inputt',
         input: 'InputText',
         placeholder: 'enter name'
+        // rules: 'required',
+      },
+      {
+        title: "Input",
+        label: 'Name',
+        id: 'inputt',
+        input: 'InputCheckbox',
+          options: [
+            { text: 'Horizontal', value: 'HORIZONTAL' },
+            { text: 'Vertical', value: 'VERTICAL' },
+          ],
         // rules: 'required',
       },
       {
@@ -125,6 +141,15 @@ export default defineComponent({
     const ItemSelected = (evt) => {
       selectedItem.value = evt
     };
+    const closeLeftSidebar = () => {
+      leftSidebarOpened.value = !leftSidebarOpened.value
+    };
+    // const OpenLeftSidebarManu = () => {
+    //   leftSidebarOpened.value = true
+    // };
+    const itemDelete = (evt) => {
+      mainLayoutItems.value.splice(evt.label)
+    }
     return {
       sidebarMenu,
       dragStart,
@@ -133,7 +158,10 @@ export default defineComponent({
       mainLayoutItems,
       storeData,
       ItemSelected,
-      selectedItem
+      selectedItem,
+      leftSidebarOpened,
+      closeLeftSidebar,
+      itemDelete
     };
   },
 });

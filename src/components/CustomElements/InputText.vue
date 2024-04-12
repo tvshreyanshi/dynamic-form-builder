@@ -1,8 +1,8 @@
 <template>
-    <b-row class="my-2">
-        <b-col :md="labelColMd" :lg="labelColLg">
+    <div class="my-2 hover:border-2 border-sky-300 active:border-sky-300">
+        <div :md="labelColMd" :lg="labelColLg">
           <label v-if="label" :for="id">{{label}}:</label>
-        </b-col>
+        </div>
         <input
         :id="id"
         :type="type"
@@ -18,7 +18,7 @@
         data-vv-delay="800"
         class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
          />
-    </b-row>
+    </div>
 
 </template>
 <script>

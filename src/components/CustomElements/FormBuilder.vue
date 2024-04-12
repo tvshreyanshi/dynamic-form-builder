@@ -13,6 +13,11 @@
           <slot v-if="item.newOption" :name="item.id"></slot>
         </div>
         <div v-else>
+          <div>
+            <b-button size="sm" variant="outline-danger shadow-none" class="mt-2" @click="$emit('deleteClick', item)">
+                delete
+              </b-button>
+          </div>
           <div class="d-flex w-100">
             <component
             v-if="!item.hideField"
@@ -51,12 +56,14 @@
 <script>
 import { ref, defineComponent } from 'vue';
 import { computeProperties } from '../Composables';
+import InputCheckboxVue from './InputCheckbox.vue';
 import InputText from "./InputText.vue";
 
 export default defineComponent({
   name: "FormBuilder",
   components: {
     InputText,
+    InputCheckboxVue,
   },
   props: {
     value: {
@@ -141,6 +148,7 @@ export default defineComponent({
           default: false,
         },
   },
+  emits: ['deleteClick'],
   setup(props, {emit}) {
     const selectedItemIndex = ref(null);
     // const emit = defineEmits(['updateItem']);
