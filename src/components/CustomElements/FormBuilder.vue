@@ -14,13 +14,12 @@
         </div>
         <div v-else>
           <div>
-            <b-button size="sm" variant="outline-danger shadow-none" class="mt-2" @click="$emit('deleteClick', item)">
+            <button size="sm" variant="outline-danger shadow-none" class="mt-2" @click="$emit('deleteClick', item)">
                 delete
-              </b-button>
+              </button>
           </div>
           <div class="d-flex w-100">
             <component
-            v-if="!item.hideField"
             :is="item.input"
             :id="item.id"
             :label="item.label"
@@ -56,14 +55,20 @@
 <script>
 import { ref, defineComponent } from 'vue';
 import { computeProperties } from '../Composables';
-import InputCheckboxVue from './InputCheckbox.vue';
+import InputCheckbox from './InputCheckbox.vue';
+import InputRadio from './InputRadio.vue';
+import InputSelect from './InputSelect.vue';
 import InputText from "./InputText.vue";
+import InputTextarea from './InputTextarea.vue';
 
 export default defineComponent({
   name: "FormBuilder",
   components: {
     InputText,
-    InputCheckboxVue,
+    InputCheckbox,
+    InputRadio,
+    InputSelect,
+    InputTextarea
   },
   props: {
     value: {

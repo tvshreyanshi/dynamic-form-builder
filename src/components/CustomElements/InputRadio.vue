@@ -1,24 +1,28 @@
 <template>
   <div>
-    <div class="my-2 flex">
+    <div>
+      <div>
         <input
-          type="checkbox"
+          type="radio"
           :id="id"
-          :options="options"
           :checked="shouldBeChecked"
-          :value="true"
-          plain
-          size="sm"
-          class="mr-2"
-        />
-        <div :md="labelColMd" :lg="labelColLg">
-        <label v-if="label" :for="id">{{ label }}</label>
-        </div>
+          :value="fieldValue"
+          :options="options"
+          @change="update"
+          @input="validateRadio"
+          plain 
+          />
+          <label
+            class="mt-px inline-block ps-[0.15rem] hover:cursor-pointer"
+            :for="id">
+           {{ label }}
+          </label>
       </div>
     </div>
+  </div>
 </template>
 <script>
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed } from 'vue'
 
 export default defineComponent({
   name: "InputCheckbox",
@@ -35,7 +39,7 @@ export default defineComponent({
         type: Number,
         default: 3,
       },
-      labelColLg: {
+        labelColLg: {
         type: Number,
         default: 4,
       },
@@ -68,13 +72,13 @@ export default defineComponent({
         default: false,
       },
   },
-  setup() {
-    const shouldBeChecked = computed((val) => {
-      return val;
+  setup(props) {
+    const shouldBeChecked = computed(() => {
+      return props.value;
     });
     return {
       shouldBeChecked,
-    };
+    }
   },
-});
+})
 </script>

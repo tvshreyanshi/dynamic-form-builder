@@ -101,8 +101,8 @@ export default defineComponent({
         // rules: 'required',
       },
       {
-        title: "Input",
-        label: 'Name',
+        title: "Checkbox",
+        label: 'checked',
         id: 'inputt',
         input: 'InputCheckbox',
           options: [
@@ -112,10 +112,34 @@ export default defineComponent({
         // rules: 'required',
       },
       {
+        title: "Radio",
+        label: 'select',
+        id: 'inputtRadio',
+        input: 'InputRadio',
+        options: [
+          { text: 'Horizontal', value: 'HORIZONTAL' },
+          { text: 'Vertical', value: 'VERTICAL' },
+        ],
+        // rules: 'required',
+      },
+      {
         title: "Select",
+        label: 'ss',
+        id: 'language',
+        input: 'InputSelect',
+        // rules: 'required',
+        options: [
+          { text: 'English', value: 'EN' },
+          { text: 'Français', value: 'FR' },
+        ],
       },
       {
         title: "Teaxt Area",
+        label: 'NOTES',
+        id: 'notes',
+        input: 'InputTextarea',
+        
+        
       },
       {
         title: "Checkbox",
