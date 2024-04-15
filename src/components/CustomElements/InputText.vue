@@ -71,7 +71,6 @@ export default defineComponent({
         },
     }),
     setup() {
-        console.log('in input text');
         // const { update } = inputDefault();
         // return {
         //     update,

@@ -21,7 +21,16 @@ export default function ComputeProperties() {
               };
               break;
           case 'InputRadio':
+            properties = {
+              options: fields.options,
+              empty: fields.empty,
+            };
+            break;
           case 'InputCheckbox':
+            properties = {
+              options: fields.options,
+            };
+            break;
           default:
             properties = {};
             break;

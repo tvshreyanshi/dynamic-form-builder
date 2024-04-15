@@ -1,19 +1,21 @@
 <template>
   <div>
-    <div class="my-2 flex">
+    <div class="my-2 block">
+      <div v-for="(item, index) in options" :key="index" class="flex items-center">
         <input
           type="checkbox"
-          :id="id"
-          :options="options"
+          :id="'checkbox_' + index"
+          :name="'checkbox_group'"
           :checked="shouldBeChecked"
-          :value="true"
+          :value="data.value"
           plain
           size="sm"
           class="mr-2"
         />
         <div :md="labelColMd" :lg="labelColLg">
-        <label v-if="label" :for="id">{{ label }}</label>
+          <label v-if="label" :for="'checkbox_' + index">{{ item.text }}</label> 
         </div>
+      </div>  
       </div>
     </div>
 </template>
@@ -24,9 +26,7 @@ export default defineComponent({
   name: "InputCheckbox",
   props: {
     type: null,
-    options: {
-      type: Object,
-    },
+    options: null,
     fieldValue: {
       type: Boolean,
       default: false,

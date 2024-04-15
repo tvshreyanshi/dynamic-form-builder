@@ -1,21 +1,21 @@
 <template>
   <div>
     <div>
-      <div>
+      <div v-for="(data, index) in options" :key="index">
         <input
           type="radio"
-          :id="id"
+          :id="'radio_' + index"
+          :name="'radio_group'"
           :checked="shouldBeChecked"
-          :value="fieldValue"
-          :options="options"
+          :value="data.value"
           @change="update"
           @input="validateRadio"
           plain 
           />
           <label
             class="mt-px inline-block ps-[0.15rem] hover:cursor-pointer"
-            :for="id">
-           {{ label }}
+            :for="'radio_' + index">
+           {{ data.text }}
           </label>
       </div>
     </div>

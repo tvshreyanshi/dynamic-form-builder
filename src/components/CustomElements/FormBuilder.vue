@@ -12,12 +12,8 @@
           <!-- slot for pass any in between header -->
           <slot v-if="item.newOption" :name="item.id"></slot>
         </div>
-        <div v-else>
-          <div>
-            <button size="sm" variant="outline-danger shadow-none" class="mt-2" @click="$emit('deleteClick', item)">
-                delete
-              </button>
-          </div>
+        <div class="flex items-center" v-else>
+          
           <div class="d-flex w-100">
             <component
             :is="item.input"
@@ -33,6 +29,11 @@
             :help="item.help">
             </component>
             <!-- @change="onChange($event, item.id)" -->
+          </div>
+          <div>
+            <button size="sm" variant="outline-danger shadow-none" @click="$emit('deleteClick', item)">
+                <img class="mt-[30px]" src="../../assets//images//Icons/delete.svg" />
+              </button>
           </div>
           <!--slot for any component in between any form input -->
           <slot v-if="item.newOption" :name="item.id"></slot>
@@ -159,10 +160,8 @@ export default defineComponent({
     // const emit = defineEmits(['updateItem']);
       const { fieldProperties } = computeProperties();
       // const { update } = inputDefault();
-      console.log('in formBuilder');
       const createGroupedArray = (arr, chunkSize) => {
 
-        console.log('in array');
       const chunks = [];
       for (let i = 0; i < arr.length; i += chunkSize) {
         chunks.push(arr.slice(i, i + chunkSize));

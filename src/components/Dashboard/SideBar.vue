@@ -4,7 +4,7 @@
     <div class="flex top-16">
       <button @click="closeLeftSidebar">Open sideBar</button>
     </div>
-    <div v-if="leftSidebarOpened" class="fixed top-16 left-0 z-40 w-64 h-screen p-4 overflow-y-auto transition-transform transform-none bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-navigation-label">
+    <div v-if="leftSidebarOpened" class="fixed -translate-x-full ease-in-out duration-300 top-16 left-0 z-40 w-64 h-screen p-4 overflow-y-auto transition-transform transform-none bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-navigation-label">
       <h5  class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400">Menu</h5>
       <button @click="closeLeftSidebar()" type="button" data-drawer-hide="drawer-navigation" aria-controls="drawer-navigation" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 end-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" >
           <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -65,6 +65,17 @@
                       <p>Placeholder</p>
                       <input type="text" v-model="selectedItem.placeholder" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                     </div>
+                    <div>
+                      <p>Options</p>
+                      <div class="my-2">
+                        <label>Add Options</label>
+                        <b-button class="btn-sm" @click="addOption">+</b-button>
+                      </div>
+                      <div v-for="(item,index) in selectedItem.options" :key="index" class="flex items-center">
+                        <input type="text" v-model="item.text" class="block my-2 w-56 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                        <button @click="removeItem(index)"><img src="../../assets/images/Icons//delete.svg" /></button>
+                      </div>
+                    </div>
                   </div>
                   <!-- <span class="ms-3">{{ selectedItem}}</span> -->
                 </a>
@@ -95,27 +106,16 @@ export default defineComponent({
       {
         title: "Input",
         label: 'Name',
-        id: 'inputt',
+        id: 'input',
         input: 'InputText',
         placeholder: 'enter name'
         // rules: 'required',
       },
       {
         title: "Checkbox",
-        label: 'checked',
-        id: 'inputt',
+        label: 'CheckBox',
+        id: 'checkbox',
         input: 'InputCheckbox',
-          options: [
-            { text: 'Horizontal', value: 'HORIZONTAL' },
-            { text: 'Vertical', value: 'VERTICAL' },
-          ],
-        // rules: 'required',
-      },
-      {
-        title: "Radio",
-        label: 'select',
-        id: 'inputtRadio',
-        input: 'InputRadio',
         options: [
           { text: 'Horizontal', value: 'HORIZONTAL' },
           { text: 'Vertical', value: 'VERTICAL' },
@@ -123,9 +123,21 @@ export default defineComponent({
         // rules: 'required',
       },
       {
+        title: "Radio",
+        label: 'Radio Button',
+        id: 'radio',
+        input: 'InputRadio',
+        options: [
+          { text: 'Male', value: 'Male' },
+          { text: 'Female', value: 'Female' },
+          { text: 'Other', value: 'Other' },
+        ],
+        // rules: 'required',
+      },
+      {
         title: "Select",
         label: 'ss',
-        id: 'language',
+        id: 'select',
         input: 'InputSelect',
         // rules: 'required',
         options: [
@@ -136,7 +148,7 @@ export default defineComponent({
       {
         title: "Teaxt Area",
         label: 'NOTES',
-        id: 'notes',
+        id: 'textarea',
         input: 'InputTextarea',
         
         
@@ -147,20 +159,15 @@ export default defineComponent({
      
     ];
     const dragStart = (item) => {
-      // console.log('drag event', item);
       event.dataTransfer.setData("text/plain", JSON.stringify(item));
     };
     const allowDrop = (event) => {
       event.preventDefault();
     }
     const dragover = () => {
-      console.log('event', event);
       event.preventDefault();
-      // console.log('item', item);
       const data = JSON.parse(event.dataTransfer.getData("text/plain"));
-      // console.log('drop', data);
       mainLayoutItems.value.push(data);
-      console.log('mainLayoutItems', mainLayoutItems);
     };
     const ItemSelected = (evt) => {
       selectedItem.value = evt
@@ -168,11 +175,17 @@ export default defineComponent({
     const closeLeftSidebar = () => {
       leftSidebarOpened.value = !leftSidebarOpened.value
     };
-    // const OpenLeftSidebarManu = () => {
-    //   leftSidebarOpened.value = true
-    // };
     const itemDelete = (evt) => {
-      mainLayoutItems.value.splice(evt.label)
+      const index = mainLayoutItems.value.findIndex(item => item.id === evt.id);
+      if (index !== -1) {
+        mainLayoutItems.value.splice(index, 1)
+      }
+    }
+    const addOption = () => {
+      selectedItem.value.options.push([]);
+    }
+    const removeItem = (index) => {
+      selectedItem.value.options.splice(index, 1)
     }
     return {
       sidebarMenu,
@@ -185,7 +198,9 @@ export default defineComponent({
       selectedItem,
       leftSidebarOpened,
       closeLeftSidebar,
-      itemDelete
+      itemDelete,
+      addOption,
+      removeItem
     };
   },
 });
