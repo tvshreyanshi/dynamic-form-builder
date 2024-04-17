@@ -20,12 +20,15 @@
           </ul>
       </div>
     </div>
-    <div class="flex-initial bg-slate-600 flex justify-center mt-[100px] main-layout" @dragover.prevent="allowDrop" @drop="dragover()">
+    <div class="bg-slate-600 flex justify-center mt-[100px] main-layout" @dragover.prevent="allowDrop" @drop="dragover()">
+      
       <div v-if="mainLayoutItems.length == 0" class="flex flex-col items-center">
         <img src="../../assets/images/drag.png" width="150px" height="150px" />
         <p class="text-white">Drop Element here...</p>
+        {{ getFormData }}
+        
       </div>
-      <!-- <div v-for="(item, index) in mainLayoutItems" :key="index"> -->
+       <!-- <div v-for="(item, index) in mainLayoutItems" :key="index"> -->
         <!-- {{ item.title }} -->
         <!-- :onSubmit="onSubmit" -->
         <form-builder
@@ -37,6 +40,11 @@
         />
         <!-- :value="user" -->
       <!-- </div> -->
+      <div class="block">
+        <button @click="saveForm(mainLayoutItems)">
+          Save <i class="fa-solid fa-square-check"></i>
+        </button>
+      </div>
     </div>
     <div v-if="selectedItem.length != 0" class="fixed top-16 right-0 z-40 w-80 h-screen p-4 overflow-y-auto transition-transform transform-none bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-navigation-label">
       <h5  class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400">Menu</h5>
@@ -57,11 +65,11 @@
                       <p>Label</p>
                       <input type="text" v-model="selectedItem.label" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"  />
                     </div>
-                    <div class="my-4">
+                    <div v-if="selectedItem.input =='InputText' || selectedItem.input =='InputTextarea'" class="my-4">
                       <p>Placeholder</p>
                       <input type="text" v-model="selectedItem.placeholder" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                     </div>
-                    <div>
+                    <div v-if="selectedItem.input !='InputText' && selectedItem.input !='InputTextarea' && selectedItem.input !='InputFile'"  >
                       <p>Options</p>
                       <div class="my-2">
                         <label>Add Options</label>
@@ -77,19 +85,16 @@
                 </a>
             </li>
           </ul>
+          
       </div>
     </div>
   </div>
 </template>
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import FormBuilder from "../CustomElements/FormBuilder.vue";
 const mainLayoutItems = ref([]);
-const storeData = ref({
-  id: '',
-  name: '',
-  title: '',
-})
+const storeData = ref({})
 
 export default defineComponent({
   components: {
@@ -98,13 +103,15 @@ export default defineComponent({
   setup() {
     const selectedItem = ref([]);
     const leftSidebarOpened = ref(true);
+    const getFormData = ref([]);
     const sidebarMenu = [
       {
         title: "Input",
         label: 'Name',
         id: 'input',
         input: 'InputText',
-        placeholder: 'enter name'
+        placeholder: 'enter name',
+        // type: 'password'
         // rules: 'required',
       },
       {
@@ -147,13 +154,40 @@ export default defineComponent({
         label: 'NOTES',
         id: 'textarea',
         input: 'InputTextarea',
-        
-        
       },
       {
-        title: "Checkbox",
+        title: "Upload File",
+        label: 'File',
+        id: 'inputfile',
+        input: 'InputFile'
       },
-     
+      {
+        title: "Heading Text",
+        label: 'Heading 1',
+        id: 'h1',
+        headingType: 'h1',
+        input: 'InputHeading'
+      },
+      {
+        title: "Title Text",
+        label: 'Heading 2',
+        id: 'h2',
+        headingType: 'h2',
+        input: 'InputHeading'
+      },
+      {
+        title: "Small Text",
+        label: 'Heading 3',
+        id: 'h3',
+        headingType: 'h3',
+        input: 'InputHeading'
+      },
+      {
+        title: 'Date',
+        label: 'DatePicker',
+        id: 'inputdate',
+        input: 'InputDate',
+      }
     ];
     const dragStart = (item) => {
       event.dataTransfer.setData("text/plain", JSON.stringify(item));
@@ -184,6 +218,18 @@ export default defineComponent({
     const removeItem = (index) => {
       selectedItem.value.options.splice(index, 1)
     }
+    const saveForm = (items) => {
+      console.log('items', items);
+      const allForms = [];
+      allForms.push({items});
+      const array1 = JSON.stringify(allForms);
+      localStorage.setItem('dynamicForms', array1)
+      
+    }
+    onMounted(() => {
+      getFormData.value = localStorage.getItem('dynamicForms')
+      console.log('getFormData', getFormData.value);
+    })
     return {
       sidebarMenu,
       dragStart,
@@ -197,7 +243,9 @@ export default defineComponent({
       closeLeftSidebar,
       itemDelete,
       addOption,
-      removeItem
+      removeItem,
+      saveForm,
+      getFormData
     };
   },
 });
@@ -213,3 +261,53 @@ export default defineComponent({
   border-radius: 7px;
 }
 </style>
+[
+    {
+        "items": [
+            {
+                "title": "Input",
+                "label": "Name",
+                "id": "input",
+                "input": "InputText",
+                "placeholder": "enter name"
+            },
+            {
+                "title": "Checkbox",
+                "label": "CheckBox",
+                "id": "checkbox",
+                "icon": "fa-regular fa-square-check",
+                "input": "InputCheckbox",
+                "options": [
+                    {
+                        "text": "Horizontal",
+                        "value": "HORIZONTAL"
+                    },
+                    {
+                        "text": "Vertical",
+                        "value": "VERTICAL"
+                    }
+                ]
+            },
+            {
+                "title": "Radio",
+                "label": "Radio Button",
+                "id": "radio",
+                "input": "InputRadio",
+                "options": [
+                    {
+                        "text": "Male",
+                        "value": "Male"
+                    },
+                    {
+                        "text": "Female",
+                        "value": "Female"
+                    },
+                    {
+                        "text": "Other",
+                        "value": "Other"
+                    }
+                ]
+            }
+        ]
+    }
+]

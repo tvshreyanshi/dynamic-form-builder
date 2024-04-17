@@ -1,5 +1,5 @@
 <template>
-    <div class="my-2 hover:border-2 border-sky-300 active:border-sky-300">
+    <div class="my-2">
         <div :md="labelColMd" :lg="labelColLg">
           <label v-if="label" :for="id">{{label}}:</label>
         </div>
@@ -16,10 +16,9 @@
         :data-vv-name="id"
         :data-vv-as="label"
         data-vv-delay="800"
-        class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        class="block w-full rounded-md border-0 py-1.5 pl-3 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
          />
     </div>
-
 </template>
 <script>
 import { defineComponent } from 'vue';
@@ -82,5 +81,6 @@ export default defineComponent({
 form h5 {
   margin-top: 2rem;
 }
+
 
 </style>

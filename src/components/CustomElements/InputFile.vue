@@ -5,7 +5,6 @@
         :type="'file'"
         :step="step"
         :placeholder="placeholder"
-        :state="errors.has(this.id) ? 'invalid' : ''"
         @change="changeCall"
         v-validate="rules"
         :data-vv-name="id"
@@ -16,7 +15,7 @@
     </div>
 </template>
 <script>
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 
 export default defineComponent({
     name: 'InputFile',
@@ -65,10 +64,11 @@ export default defineComponent({
         default: false,
       },
   }),
-    setup() {
+    setup(props) {
+      const selectedFile = ref('');
         const getFileInput = computed(() => {
-            if (this.value) {
-            const path = this.value;
+            if (props.value) {
+            const path = props.value;
             const getfileName = path.split('/').pop().split('-').pop();
             return getfileName;
         }
@@ -76,8 +76,8 @@ export default defineComponent({
         });
         const changeCall = (e) => {
             const file = e.target.files;
-            this.selectedFile = file[0].name;
-            this.update({ id: this.id, value: this.isMultiple ? file[0] : file[0] });
+            selectedFile.value = file[0].name;
+            // this.update({ id: this.id, value: this.isMultiple ? file[0] : file[0] });
         }
         const clickFile = (fileInputId) => {
             document.getElementById(fileInputId).click();

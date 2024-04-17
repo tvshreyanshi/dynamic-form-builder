@@ -2,6 +2,7 @@ export default function ComputeProperties() {
   // setup() {
     // return {
       const fieldProperties = (fields) => {
+        console.log('fields', fields);
         let properties;
         switch (fields.input) {
           case 'InputTextarea':
@@ -30,6 +31,15 @@ export default function ComputeProperties() {
             properties = {
               options: fields.options,
             };
+            break;
+          case 'InputFile':
+          case 'InputHeadingH1':
+            break;
+          case 'InputDate':
+            properties = {
+              min: fields.min || null,
+              max: fields.max || null,
+            }
             break;
           default:
             properties = {};

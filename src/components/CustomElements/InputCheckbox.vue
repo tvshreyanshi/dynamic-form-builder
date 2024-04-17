@@ -7,7 +7,6 @@
           :id="'checkbox_' + index"
           :name="'checkbox_group'"
           :checked="shouldBeChecked"
-          :value="data.value"
           plain
           size="sm"
           class="mr-2"

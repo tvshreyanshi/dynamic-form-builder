@@ -12,7 +12,7 @@
           <!-- slot for pass any in between header -->
           <slot v-if="item.newOption" :name="item.id"></slot>
         </div>
-        <div class="flex items-center" v-else>
+        <div class="flex items-center selectInput" v-else>
           
           <div class="d-flex w-100">
             <component
@@ -26,6 +26,7 @@
             :placeholder="item.placeholder"
             @click="selectItem(rowIndex, colIndex, item)"
             :class="{ selected: isSelected(rowIndex, index)}"
+            :headingType="item.headingType"
             :help="item.help">
             </component>
             <!-- @change="onChange($event, item.id)" -->
@@ -61,6 +62,9 @@ import InputRadio from './InputRadio.vue';
 import InputSelect from './InputSelect.vue';
 import InputText from "./InputText.vue";
 import InputTextarea from './InputTextarea.vue';
+import InputFile from './InputFile.vue';
+import InputHeading from './InputHeading.vue';
+import InputDate from './InputDate.vue';
 
 export default defineComponent({
   name: "FormBuilder",
@@ -69,7 +73,10 @@ export default defineComponent({
     InputCheckbox,
     InputRadio,
     InputSelect,
-    InputTextarea
+    InputTextarea,
+    InputFile,
+    InputHeading,
+    InputDate
   },
   props: {
     value: {
@@ -186,4 +193,9 @@ export default defineComponent({
   },
 });
 </script>
+<style>
+.selectInput:focus-within, .selectInput:active {
+    border: 2px solid black;
+}
+</style>
 
