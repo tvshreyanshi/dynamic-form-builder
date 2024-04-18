@@ -6,7 +6,6 @@
         :step="step"
         :placeholder="placeholder"
         @change="changeCall"
-        v-validate="rules"
         :data-vv-name="id"
         :data-vv-as="label"
         data-vv-delay="800"

@@ -8,7 +8,6 @@
           :name="'checkbox_group'"
           :checked="shouldBeChecked"
           plain
-          size="sm"
           class="mr-2"
         />
         <div :md="labelColMd" :lg="labelColLg">

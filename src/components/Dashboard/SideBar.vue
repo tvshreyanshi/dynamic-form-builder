@@ -1,8 +1,8 @@
 <template>
   <!-- drawer init and show -->
   <div class="flex">
-    <div class="flex top-16">
-      <button @click="closeLeftSidebar"><i class="fa-solid fa-bars"></i></button>
+    <div class="flex mt-16">
+      <button class="flex" @click="closeLeftSidebar"><i class="fa-solid fa-bars text-3xl"></i></button>
     </div>
     <div v-if="leftSidebarOpened" class=" w-72 duration-300 fixed top-16 left-0 z-40 h-screen p-4 overflow-y-auto bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-navigation-label">
       <h5  class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400">Menu</h5>
@@ -19,14 +19,23 @@
             </li>
           </ul>
       </div>
+      <div class="bg-slate-600 flex justify-center mt-[100px] items-center m-auto rounded">
+       <button class="text-white" @click="showPreviousForm()">Show Previous form</button>
+      </div>
     </div>
-    <div class="bg-slate-600 flex justify-center mt-[100px] main-layout" @dragover.prevent="allowDrop" @drop="dragover()">
-      
-      <div v-if="mainLayoutItems.length == 0" class="flex flex-col items-center">
+    <div class="bg-slate-600 justify-center mt-[100px] main-layout" @dragover.prevent="allowDrop" @drop="dragover()">
+      <div v-if="mainLayoutItems.length == 0 && getFormData.length === 0" class="flex flex-col items-center">
         <img src="../../assets/images/drag.png" width="150px" height="150px" />
         <p class="text-white">Drop Element here...</p>
-        {{ getFormData }}
-        
+      </div>
+      <div class="flex flex-col items-center">
+        <form-builder
+        resource=""
+        :items="getFormData"
+        :value="storeData"
+        @updateItem="ItemSelected"
+        @deleteClick="itemDelete"
+        />
       </div>
        <!-- <div v-for="(item, index) in mainLayoutItems" :key="index"> -->
         <!-- {{ item.title }} -->
@@ -37,11 +46,12 @@
         :value="storeData"
         @updateItem="ItemSelected"
         @deleteClick="itemDelete"
+        @copyElement="itemCopy"
         />
         <!-- :value="user" -->
       <!-- </div> -->
-      <div class="block">
-        <button @click="saveForm(mainLayoutItems)">
+      <div v-if="mainLayoutItems.length > 0" class="flex justify-end m-3">
+        <button class="bg-white p-2 rounded-md" @click="saveForm(mainLayoutItems)">
           Save <i class="fa-solid fa-square-check"></i>
         </button>
       </div>
@@ -91,7 +101,7 @@
   </div>
 </template>
 <script>
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, ref } from "vue";
 import FormBuilder from "../CustomElements/FormBuilder.vue";
 const mainLayoutItems = ref([]);
 const storeData = ref({})
@@ -208,8 +218,12 @@ export default defineComponent({
     };
     const itemDelete = (evt) => {
       const index = mainLayoutItems.value.findIndex(item => item.id === evt.id);
+      const index1 = getFormData.value.findIndex(item => item.id === evt.id);
       if (index !== -1) {
         mainLayoutItems.value.splice(index, 1)
+      }
+      if (index1 !== -1) {
+        getFormData.value.splice(index1, 1);
       }
     }
     const addOption = () => {
@@ -219,17 +233,17 @@ export default defineComponent({
       selectedItem.value.options.splice(index, 1)
     }
     const saveForm = (items) => {
-      console.log('items', items);
-      const allForms = [];
-      allForms.push({items});
-      const array1 = JSON.stringify(allForms);
+      const array1 = JSON.stringify(items);
       localStorage.setItem('dynamicForms', array1)
-      
     }
-    onMounted(() => {
-      getFormData.value = localStorage.getItem('dynamicForms')
-      console.log('getFormData', getFormData.value);
-    })
+    const showPreviousForm = () => {
+      const data = localStorage.getItem('dynamicForms')
+      getFormData.value = JSON.parse(data)
+    }
+    const itemCopy = (item, colIndex) => {
+      console.log('colIndex', colIndex);
+      mainLayoutItems.value.push(item);
+    }
     return {
       sidebarMenu,
       dragStart,
@@ -245,7 +259,9 @@ export default defineComponent({
       addOption,
       removeItem,
       saveForm,
-      getFormData
+      getFormData,
+      showPreviousForm,
+      itemCopy
     };
   },
 });
@@ -261,53 +277,4 @@ export default defineComponent({
   border-radius: 7px;
 }
 </style>
-[
-    {
-        "items": [
-            {
-                "title": "Input",
-                "label": "Name",
-                "id": "input",
-                "input": "InputText",
-                "placeholder": "enter name"
-            },
-            {
-                "title": "Checkbox",
-                "label": "CheckBox",
-                "id": "checkbox",
-                "icon": "fa-regular fa-square-check",
-                "input": "InputCheckbox",
-                "options": [
-                    {
-                        "text": "Horizontal",
-                        "value": "HORIZONTAL"
-                    },
-                    {
-                        "text": "Vertical",
-                        "value": "VERTICAL"
-                    }
-                ]
-            },
-            {
-                "title": "Radio",
-                "label": "Radio Button",
-                "id": "radio",
-                "input": "InputRadio",
-                "options": [
-                    {
-                        "text": "Male",
-                        "value": "Male"
-                    },
-                    {
-                        "text": "Female",
-                        "value": "Female"
-                    },
-                    {
-                        "text": "Other",
-                        "value": "Other"
-                    }
-                ]
-            }
-        ]
-    }
-]
+

@@ -15,6 +15,7 @@
         <div class="flex items-center selectInput" v-else>
           
           <div class="d-flex w-100">
+            <!-- :key="key" -->
             <component
             :is="item.input"
             :id="item.id"
@@ -22,7 +23,6 @@
             :module="resource && `${resource}s`"
             v-bind="fieldProperties(item)"
             v-model="value[item.id]"
-            :key="key"
             :placeholder="item.placeholder"
             @click="selectItem(rowIndex, colIndex, item)"
             :class="{ selected: isSelected(rowIndex, index)}"
@@ -31,10 +31,11 @@
             </component>
             <!-- @change="onChange($event, item.id)" -->
           </div>
-          <div>
+          <div class="flex justify-between m-3">
+            <button class="mr-2" @click="$emit('copyElement', item, colIndex)"><i class="fa-regular fa-copy"></i></button>
             <button size="sm" variant="outline-danger shadow-none" @click="$emit('deleteClick', item)">
-                <img class="mt-[30px]" src="../../assets//images//Icons/delete.svg" />
-              </button>
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
           </div>
           <!--slot for any component in between any form input -->
           <slot v-if="item.newOption" :name="item.id"></slot>
@@ -161,7 +162,7 @@ export default defineComponent({
           default: false,
         },
   },
-  emits: ['deleteClick'],
+  emits: ['deleteClick', 'copyElement'],
   setup(props, {emit}) {
     const selectedItemIndex = ref(null);
     // const emit = defineEmits(['updateItem']);

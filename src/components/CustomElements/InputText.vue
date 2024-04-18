@@ -12,7 +12,6 @@
         :value="value"
         :placeholder="placeholder"
         @input="update"
-        size="sm"
         :data-vv-name="id"
         :data-vv-as="label"
         data-vv-delay="800"

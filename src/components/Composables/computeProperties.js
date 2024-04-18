@@ -2,7 +2,6 @@ export default function ComputeProperties() {
   // setup() {
     // return {
       const fieldProperties = (fields) => {
-        console.log('fields', fields);
         let properties;
         switch (fields.input) {
           case 'InputTextarea':
