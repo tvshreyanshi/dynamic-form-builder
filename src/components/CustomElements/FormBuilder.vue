@@ -4,6 +4,7 @@
     autocomplete="off"
     :name="resource ? `${resource}-form` : 'global-form'"
     @submit.prevent="submitForm"
+    class="m-4"
   >
   <div v-for="(chunk, rowIndex) in createGroupedArray(items, cols)" :key="rowIndex"> <!-- row -->
       <div v-for="(item, colIndex) in chunk" :key="colIndex" > <!-- set as col -->

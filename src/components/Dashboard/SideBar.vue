@@ -40,14 +40,16 @@
        <!-- <div v-for="(item, index) in mainLayoutItems" :key="index"> -->
         <!-- {{ item.title }} -->
         <!-- :onSubmit="onSubmit" -->
-        <form-builder
-        resource=""
-        :items="mainLayoutItems"
-        :value="storeData"
-        @updateItem="ItemSelected"
-        @deleteClick="itemDelete"
-        @copyElement="itemCopy"
-        />
+        <div class="flex flex-col items-center">   
+          <form-builder
+          resource=""
+          :items="mainLayoutItems"
+          :value="storeData"
+          @updateItem="ItemSelected"
+          @deleteClick="itemDelete"
+          @copyElement="itemCopy"
+          />
+        </div>
         <!-- :value="user" -->
       <!-- </div> -->
       <div v-if="mainLayoutItems.length > 0" class="flex justify-end m-3">
@@ -71,15 +73,25 @@
                       <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
                   </svg> -->
                   <div class="block">
-                    <div class="my-4">
-                      <p>Label</p>
-                      <input type="text" v-model="selectedItem.label" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"  />
+                    <div class="my-2 flex justify-between">
+                      <p class="text-sm">Label</p>
+                      <input type="text" v-model="selectedItem.label" class="block w-2/3 rounded-md border-0 py-1.5 pl-3 pr-5 text-gray-900 placeholder:text-gray-400 sm:text-sm"  />
                     </div>
-                    <div v-if="selectedItem.input =='InputText' || selectedItem.input =='InputTextarea'" class="my-4">
-                      <p>Placeholder</p>
-                      <input type="text" v-model="selectedItem.placeholder" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                    <div class="my-3 flex justify-between">
+                      <p class="text-sm">Title</p>
+                      <input type="text" v-model="selectedItem.title" class="block w-2/3 rounded-md border-0 py-1.5 pl-3 pr-5 text-gray-900 placeholder:text-gray-400 sm:text-sm"  />
                     </div>
-                    <div v-if="selectedItem.input !='InputText' && selectedItem.input !='InputTextarea' && selectedItem.input !='InputFile'"  >
+                    <hr />
+                    <div v-if="selectedItem.input =='InputText' || selectedItem.input =='InputTextarea'" class="my-3 flex justify-between">
+                      <p class="text-sm my-2">Placeholder</p>
+                      <input type="text" v-model="selectedItem.placeholder" class="block w-2/3 rounded-md border-0 py-1.5 pl-3 pr-5 text-gray-900 placeholder:text-gray-400 sm:text-sm " />
+                    </div>
+                    <div class="my-3 flex justify-between">
+                      <p class="text-sm my-2">Tool-Tip</p>
+                      <input type="text" v-model="selectedItem.help" class="block w-2/3 rounded-md border-0 py-1.5 pl-3 pr-5 text-gray-900 placeholder:text-gray-400 sm:text-sm " />
+                    </div>
+                    <hr />
+                    <div v-if="selectedItem.input !='InputText' && selectedItem.input !='InputTextarea' && selectedItem.input !='InputFile' && selectedItem.input !='InputHeading' && selectedItem.input != 'InputDate'" >
                       <p>Options</p>
                       <div class="my-2">
                         <label>Add Options</label>
@@ -121,6 +133,7 @@ export default defineComponent({
         id: 'input',
         input: 'InputText',
         placeholder: 'enter name',
+        help: 'Input Text'
         // type: 'password'
         // rules: 'required',
       },
