@@ -68,10 +68,6 @@
           <ul class="space-y-2 font-medium">
             <li draggable="true" @dragstart="dragStart(sb)">
                 <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                  <!-- <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
-                      <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
-                      <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
-                  </svg> -->
                   <div class="block">
                     <div class="my-2 flex justify-between">
                       <p class="text-sm">Label</p>
@@ -100,6 +96,13 @@
                       <div v-for="(item,index) in selectedItem.options" :key="index" class="flex items-center">
                         <input type="text" v-model="item.text" class="block my-2 w-56 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
                         <button @click="removeItem(index)"><img src="../../assets/images/Icons//delete.svg" /></button>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="my-2 flex justify-between">
+                      <p>Type</p>
+                      <div class="flex items-center">
+                        
                       </div>
                     </div>
                   </div>
@@ -224,7 +227,18 @@ export default defineComponent({
       mainLayoutItems.value.push(data);
     };
     const ItemSelected = (evt) => {
-      selectedItem.value = evt
+        const inputOptions = [
+          {
+              text: 'Date',
+              value: 'date'
+          },
+          {
+              text: 'input',
+              value: 'Input'
+          }
+        ]
+        selectedItem.value = {...evt, ...inputOptions}
+        console.log('selectedItem.value', selectedItem.value);
     };
     const closeLeftSidebar = () => {
       leftSidebarOpened.value = !leftSidebarOpened.value
@@ -251,10 +265,24 @@ export default defineComponent({
     }
     const showPreviousForm = () => {
       const data = localStorage.getItem('dynamicForms')
-      getFormData.value = JSON.parse(data)
+      if (data) {
+        getFormData.value = JSON.parse(data)
+      } else {
+        getFormData.value.push({
+        title: "Input",
+        label: 'Name',
+        id: 'input',
+        input: 'InputText',
+        placeholder: 'enter name',
+        help: 'Input Text'
+        // type: 'password'
+        // rules: 'required',
+        });
+      }
     }
     const itemCopy = (item, colIndex) => {
       console.log('colIndex', colIndex);
+      
       mainLayoutItems.value.push(item);
     }
     return {

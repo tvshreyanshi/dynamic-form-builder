@@ -17,25 +17,19 @@
         data-vv-delay="800"
         :help="help"
         class="block w-full rounded-md border-0 py-1.5 pl-3 pr-3 text-gray-900 ring-1 placeholder:text-gray-400 sm:text-sm text-sm"
-         />{{ help }}----
-         <HelpTooltip
-        v-if="help"
-        :help="help"
-        :id="id"
-      ></HelpTooltip>
+         />
+         
     </div>
 </template>
 <script>
 import { defineComponent } from 'vue';
-import HelpTooltip from './HelpTooltip.vue';
 // import { inputDefault } from '../Composables';
 
 export default defineComponent({
     components: {
-        HelpTooltip,
     },
     props: ({
-        type: null,
+        type: Object,
         min: null,
         max: null,
         step: null,

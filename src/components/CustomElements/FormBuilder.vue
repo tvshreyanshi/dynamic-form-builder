@@ -197,7 +197,7 @@ export default defineComponent({
 </script>
 <style>
 .selectInput:focus-within, .selectInput:active {
-    border: 2px solid black;
+    border: 2px solid white;
 }
 </style>
 
