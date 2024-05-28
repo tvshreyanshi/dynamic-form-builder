@@ -13,8 +13,7 @@
           <!-- slot for pass any in between header -->
           <slot v-if="item.newOption" :name="item.id"></slot>
         </div>
-        <div class="flex items-center selectInput" v-else>
-          
+        <div class="flex items-center selectInput cursor-pointer" v-else :draggable="true" @dragstart="internaldragstart($event, rowIndex, colIndex)" @dragover.prevent="allowDrop" @drop="interalDragOver($event, rowIndex, colIndex)">
           <div class="d-flex w-100">
             <!-- :key="key" -->
             <component
@@ -33,9 +32,9 @@
             <!-- @change="onChange($event, item.id)" -->
           </div>
           <div class="flex justify-between m-3">
-            <button class="mr-2" @click="$emit('copyElement', item, colIndex)"><i class="fa-regular fa-copy"></i></button>
+            <button class="mr-2" @click="$emit('copyElement', item, colIndex)"><i class="fa-regular fa-copy text-white"></i></button>
             <button size="sm" variant="outline-danger shadow-none" @click="$emit('deleteClick', item)">
-              <i class="fa-solid fa-trash-can"></i>
+              <i class="fa-solid fa-trash-can text-white"></i>
             </button>
           </div>
           <!--slot for any component in between any form input -->
@@ -165,6 +164,8 @@ export default defineComponent({
   },
   emits: ['deleteClick', 'copyElement'],
   setup(props, {emit}) {
+    const internalDragItem = ref(null);
+    const internalDragIndex = ref(null);
     const selectedItemIndex = ref(null);
     // const emit = defineEmits(['updateItem']);
       const { fieldProperties } = computeProperties();
@@ -185,12 +186,44 @@ export default defineComponent({
       const selected = selectedItemIndex.value;
       return selected && selected.rowIndex === rowIndex && selected.colIndex === colIndex;
     };
+    const internaldragstart = (event, rowIndex, colIndex) => {
+      internalDragItem.value = { rowIndex, colIndex };
+      event.dataTransfer.effectAllowed = 'move'      
+    }
+    const allowDrop = (event) => {
+      event.preventDefault();
+    }
+    const interalDragOver = (event, rowIndex, colIndex) => {
+      event.preventDefault();
+      const draggedIndex = internalDragItem.value;
+      if (!draggedIndex || (draggedIndex.rowIndex === rowIndex && draggedIndex.colIndex === colIndex)) {
+        return;
+      }
+
+      const fromIndex = draggedIndex.rowIndex * props.cols + draggedIndex.colIndex;
+      const toIndex = rowIndex * props.cols + colIndex;
+
+      // Move the item in the array
+      // eslint-disable-next-line vue/no-mutating-props
+      const item = props.items.splice(fromIndex, 1)[0];
+      // eslint-disable-next-line vue/no-mutating-props
+      props.items.splice(toIndex, 0, item);
+      
+
+      // Update the dragged item index
+      internalDragItem.value = { rowIndex, colIndex };
+    }
       return{
         fieldProperties,
         // update,
         createGroupedArray,
         selectItem,
         isSelected,
+        internaldragstart,
+        interalDragOver,
+        allowDrop,
+        internalDragItem,
+        internalDragIndex
       }
   },
 });

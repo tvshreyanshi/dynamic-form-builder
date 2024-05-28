@@ -3,33 +3,34 @@
         <div class="mb-1">
           <label :data-tooltip-target="help" :help="help"  class="text-sm text-white" v-if="label" :for="id">{{ label }}</label>
         </div>
-        <input
-        :id="id"
-        :type="type"
-        :min="min"
-        :max="max"
-        :step="step"
-        :value="value"
-        :placeholder="placeholder"
-        @input="update"
-        :data-vv-name="id"
-        :data-vv-as="label"
-        data-vv-delay="800"
-        :help="help"
-        class="block w-full rounded-md border-0 py-1.5 pl-3 pr-3 text-gray-900 ring-1 placeholder:text-gray-400 sm:text-sm text-sm"
-         />
-         
+            <input
+            :id="id"
+            :type="type"
+            :min="min"
+            :max="max"
+            :step="step"
+            :value="value"
+            :placeholder="placeholder"
+            @input="update"
+            :data-vv-name="id"
+            :data-vv-as="label"
+            data-vv-delay="800"
+            :help="help"
+            class="block w-full rounded-md border-0 py-1.5 pl-3 pr-3 text-gray-900 ring-1 placeholder:text-gray-400 sm:text-sm text-sm"
+             />
     </div>
 </template>
 <script>
 import { defineComponent } from 'vue';
-// import { inputDefault } from '../Composables';
 
 export default defineComponent({
     components: {
     },
+    // inject: ['$validator'],
     props: ({
-        type: Object,
+        type: {
+            type: String,
+        },
         min: null,
         max: null,
         step: null,
@@ -38,6 +39,10 @@ export default defineComponent({
         labelColMd: {
         type: Number,
         default: 3,
+        },
+        name: {
+            type: String,
+            required: false,
         },
         labelColLg: {
             type: Number,
@@ -73,9 +78,10 @@ export default defineComponent({
         },
     }),
     setup() {
-        // const { update } = inputDefault();
+        // const { value1, errorMessage } = useField(props.name)
         // return {
-        //     update,
+        //     value1,
+        //     errorMessage,
         // }
     },
 })
@@ -84,6 +90,4 @@ export default defineComponent({
 form h5 {
   margin-top: 2rem;
 }
-
-
 </style>

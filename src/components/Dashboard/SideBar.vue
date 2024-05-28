@@ -40,7 +40,7 @@
        <!-- <div v-for="(item, index) in mainLayoutItems" :key="index"> -->
         <!-- {{ item.title }} -->
         <!-- :onSubmit="onSubmit" -->
-        <div class="flex flex-col items-center">   
+        <div class="flex flex-col items-center">
           <form-builder
           resource=""
           :items="mainLayoutItems"
@@ -73,7 +73,7 @@
                       <p class="text-sm">Label</p>
                       <input type="text" v-model="selectedItem.label" class="block w-2/3 rounded-md border-0 py-1.5 pl-3 pr-5 text-gray-900 placeholder:text-gray-400 sm:text-sm"  />
                     </div>
-                    <div class="my-3 flex justify-between">
+                    <div class="my-3 flex justify-between"> 
                       <p class="text-sm">Title</p>
                       <input type="text" v-model="selectedItem.title" class="block w-2/3 rounded-md border-0 py-1.5 pl-3 pr-5 text-gray-900 placeholder:text-gray-400 sm:text-sm"  />
                     </div>
@@ -95,14 +95,16 @@
                       </div>
                       <div v-for="(item,index) in selectedItem.options" :key="index" class="flex items-center">
                         <input type="text" v-model="item.text" class="block my-2 w-56 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
-                        <button @click="removeItem(index)"><img src="../../assets/images/Icons//delete.svg" /></button>
+                        <button @click="removeItem(index)"><i class="fa-solid fa-trash-can text-white ml-2"></i></button>
                       </div>
                     </div>
                     <hr />
                     <div class="my-2 flex justify-between">
-                      <p>Type</p>
+                      <p>InputType</p>
                       <div class="flex items-center">
-                        
+                        <select v-model="selectedType" name="inputType" id="input-type" class="block rounded-md border-0 py-1.5  text-gray-900 placeholder:text-gray-400 sm:text-sm w-max">
+                          <option v-for="(item,index) in selectTypeOption" :key="index">{{ item.text }}</option>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -116,10 +118,11 @@
   </div>
 </template>
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import FormBuilder from "../CustomElements/FormBuilder.vue";
 const mainLayoutItems = ref([]);
-const storeData = ref({})
+const storeData = ref({});
+const selectedType = 'InputText';
 
 export default defineComponent({
   components: {
@@ -129,6 +132,21 @@ export default defineComponent({
     const selectedItem = ref([]);
     const leftSidebarOpened = ref(true);
     const getFormData = ref([]);
+    const selectTypeOption = computed(() => {
+      const options = [
+        {text: 'Number', value: 'number'},
+        {text: 'Text', value: 'InputText'},
+        {text: 'Color', value: 'color'},
+        {text: 'Date', value: 'date'},
+        {text: 'Time', value: 'time'},
+        {text: 'Email', value: 'email'},
+        {text: 'Password', value: 'password'},
+        {text: 'Range', value: 'range '},
+        {text: 'Search', value: 'search'},
+        {text: 'URL', value: 'url'},
+      ];
+      return options;
+    })
     const sidebarMenu = [
       {
         title: "Input",
@@ -136,9 +154,9 @@ export default defineComponent({
         id: 'input',
         input: 'InputText',
         placeholder: 'enter name',
-        help: 'Input Text'
+        help: 'Input Text',
         // type: 'password'
-        // rules: 'required',
+        rules: 'required',
       },
       {
         title: "Checkbox",
@@ -223,22 +241,16 @@ export default defineComponent({
     }
     const dragover = () => {
       event.preventDefault();
-      const data = JSON.parse(event.dataTransfer.getData("text/plain"));
-      mainLayoutItems.value.push(data);
+      const data = event.dataTransfer.getData("text/plain");
+      try {
+        const parsedItem = JSON.parse(data);
+        mainLayoutItems.value.push(parsedItem);
+      } catch(error) {
+        console.error('error', error);
+      }
     };
     const ItemSelected = (evt) => {
-        const inputOptions = [
-          {
-              text: 'Date',
-              value: 'date'
-          },
-          {
-              text: 'input',
-              value: 'Input'
-          }
-        ]
-        selectedItem.value = {...evt, ...inputOptions}
-        console.log('selectedItem.value', selectedItem.value);
+      selectedItem.value = evt;
     };
     const closeLeftSidebar = () => {
       leftSidebarOpened.value = !leftSidebarOpened.value
@@ -275,14 +287,11 @@ export default defineComponent({
         input: 'InputText',
         placeholder: 'enter name',
         help: 'Input Text'
-        // type: 'password'
-        // rules: 'required',
         });
       }
     }
     const itemCopy = (item, colIndex) => {
       console.log('colIndex', colIndex);
-      
       mainLayoutItems.value.push(item);
     }
     return {
@@ -302,7 +311,9 @@ export default defineComponent({
       saveForm,
       getFormData,
       showPreviousForm,
-      itemCopy
+      itemCopy,
+      selectedType,
+      selectTypeOption,
     };
   },
 });
