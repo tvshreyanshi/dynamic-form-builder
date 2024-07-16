@@ -1,4 +1,4 @@
-import { defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 export default function inputDefault() {
   // eslint-disable-next-line no-unused-vars
   const propsval = defineProps({
@@ -34,29 +34,32 @@ export default function inputDefault() {
       index: null,
       value: null,
       help: null,
-      hideField: false,
+      hideField: {
+        type: Boolean,
+        default: false,
+      },
   })
-  // const emit = defineEmits(["change"]);
-  // const update = (value) => {
-  //   console.log('--in update',);
-  //   if(!propsval.preventUpdate) {
-  //     let s = 'updateItem';
-  //     if(propsval.module) {
-  //         s = `${propsval.module}/${s}`;
-  //         console.log('value of s:', s);
-  //     }
-  //     const payload = {
-  //       item: propsval.id,
-  //       value: typeof value === 'object' && value && value.value ? value.value : value,
-  //     };
-  //     if (propsval.index !== undefined) {
-  //       payload.index = propsval.index;
-  //     }else {
-  //       emit('change', value);
-  //     }
-  //   }
-  // }
-  // return {
-  //   update,
-  // }
+  const emit = defineEmits(["change"]);
+  const update = (value) => {
+    console.log('--in update', value);
+    if(!this.preventUpdate) {
+      let s = 'updateItem';
+      if(propsval.module) {
+          s = `${propsval.module}/${s}`;
+          console.log('value of s:', s);
+      }
+      const payload = {
+        item: propsval.id,
+        value: typeof value === 'object' && value && value.value ? value.value : value,
+      };
+      if (propsval.index !== undefined) {
+        payload.index = propsval.index;
+      }else {
+        emit('change', value);
+      }
+    }
+  }
+  return {
+    update,
+  }
 }

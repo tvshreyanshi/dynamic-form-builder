@@ -246,7 +246,7 @@ export default defineComponent({
         const parsedItem = JSON.parse(data);
         mainLayoutItems.value.push(parsedItem);
       } catch(error) {
-        console.error('error', error);
+        console.warn('error', error);
       }
     };
     const ItemSelected = (evt) => {
